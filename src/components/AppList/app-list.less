@@ -1,0 +1,134 @@
+@import '../../App.less';
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -20%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+// 免費app列表
+.list {
+  .px2rem(padding-left, 15px);
+  li {
+    position: relative;
+    display: flex;
+    .px2rem(padding-top, 10px);
+    .px2rem(padding-bottom, 10px);
+    animation: slideDown 0.5s linear;
+    border-bottom: 1px solid @border-color;
+    .number {
+      display: flex;
+      align-items: center;
+      flex: 0 0 auto;
+      .px2rem(flex-basis, 25px);
+      .px2rem(font-size, 18px);
+      color: @gray-color;
+    }
+    .img {
+      flex: 0 0 auto;
+      .px2rem(flex-basis, 53px);
+      .px2rem(height, 53px);
+      .px2rem(border-radius, 10px);
+      overflow: hidden;
+      &.even {
+        border-radius: 50%;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .info {
+      flex: 1 1 auto;
+      .px2rem(padding-left, 10px);
+      .px2rem(padding-right, 10px);
+      .px2rem(padding-top, 4px);
+      .px2rem(padding-bottom, 4px);
+      .textOverflow();
+      .name {
+        .textOverflow();
+      }
+      .category {
+        .px2rem(padding-top, 5px);
+        .px2rem(font-size, 12px);
+        color: @gray-color;
+      }
+      .level {
+        .px2rem(margin-top, -16px);
+        :global {
+          .iconfont {
+            .px2rem(font-size, 10px);
+            color: rgb(253, 194, 0);
+          }
+        }
+        em {
+          font-style: normal;
+          .px2rem(font-size, 10px);
+          color: @gray-color;
+        }
+      }
+    }
+  }
+}
+
+.loading {
+  .px2rem(height, 64px);
+  text-align: center;
+  > div {
+    margin: 10px auto;
+    transform: scale(0.8);
+  }
+}
+
+.empty {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .tip {
+    .px2rem(font-size, 12px);
+  }
+  :global {
+    .icon-empty {
+      .px2rem(font-size, 60px);
+    }
+  }
+}
+
+.bottomLine {
+  position: relative;
+  .px2rem(height, 50px);
+  &::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 60%;
+    height: 1px;
+    margin: auto;
+    content: '';
+    text-align: center;
+    background-color: @border-color;
+  }
+  span {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    .px2rem(width, 90px);
+    .px2rem(height, 26px);
+    .px2rem(line-height, 26px);
+    margin: auto;
+    .px2rem(font-size, 10px);
+    text-align: center;
+    background-color: #fff;
+  }
+}

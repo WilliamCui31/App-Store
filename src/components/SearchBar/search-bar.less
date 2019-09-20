@@ -1,0 +1,47 @@
+@import '../../App.less';
+
+// 搜索框
+.searchBar {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  .px2rem(height, 42px);
+  border-bottom: 1px solid @border-color;
+  background-color: #fafafa;
+  .px2rem(line-height, 42px);
+  text-align: center;
+  input {
+    .px2rem(height, 26px);
+    width: 94%;
+    background-color: @border-color;
+    border: none;
+    border-radius: 4px;
+    padding: 0 10px;
+    outline: none;
+  }
+  .label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    .px2rem(width, 60px);
+    .px2rem(height, 26px);
+    .px2rem(line-height, 26px);
+    margin: auto;
+    color: @gray-color;
+    .px2rem(font-size, 14px);
+    transition: all 0.2s ease-in;
+    &.isFoucs {
+      transform: scale(0);
+      opacity: 0;
+    }
+    :global {
+      .icon-search {
+        .px2rem(margin-right, 4px);
+      }
+    }
+  }
+}
