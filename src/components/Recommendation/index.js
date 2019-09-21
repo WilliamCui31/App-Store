@@ -33,15 +33,17 @@ class Recommendation extends PureComponent {
         <h3>推介</h3>
         <div className={styles.wrapper}>
           <ul className={styles.list}>
-            {list.map(item => (
-              <li key={item.id.attributes['im:id']}>
-                <div className={styles.img}>
-                  <img src={item['im:image'][viewport.width > 320 ? 2 : 1].label} alt="app-img" />
-                </div>
-                <h5 className={styles.name}>{item['im:name'].label}</h5>
-                <h6 className={styles.category}>{item.category.attributes.label}</h6>
-              </li>
-            ))}
+            {list.map(item => {
+              return (
+                <li key={item.id.attributes['im:id']}>
+                  <div className={styles.img}>
+                    <img src={item['im:image'][viewport.width > 320 ? 2 : 1].label} alt="app-img" />
+                  </div>
+                  <h5 className={styles.name}>{item['im:name'].label}</h5>
+                  <h6 className={styles.category}>{item.category.attributes.label}</h6>
+                </li>
+              );
+            })}
           </ul>
           {(status === 'empty' || status === 'loading') && (
             <div className={styles.loading}>

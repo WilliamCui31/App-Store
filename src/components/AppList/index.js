@@ -40,7 +40,7 @@ class AppList extends PureComponent {
     if (prevProps.appList.status === 'loading' && appList.status === 'success') {
       this.loadShowList(1);
     }
-    if (prevProps.keywords !== keywords) {
+    if (keywords && prevProps.keywords !== keywords) {
       clearSearchList();
       this.loadSearchList(1);
     }
@@ -48,7 +48,7 @@ class AppList extends PureComponent {
 
   // 根据搜索关键字分页加载评分等级和评论数量
   loadSearchList = page => {
-    const { keywords, appList, loadSearchList, loadSearchListSuccess } = this.props;
+    const { keywords, appList, updateAppList, loadSearchList, loadSearchListSuccess } = this.props;
     loadSearchList();
     const startIndex = 10 * (page - 1);
     const endIndex = 10 * (page - 1) + 10;
@@ -58,18 +58,42 @@ class AppList extends PureComponent {
       const summary = item.summary.label;
       const reg = new RegExp(keywords);
       return reg.test(name) || reg.test(category) || reg.test(summary);
-    });
-    const loadList = searchAllList.slice(startIndex, endIndex);
+    }); // 搜尋列表
+    let pageList = searchAllList.slice(startIndex, endIndex); // 分頁列表
+    const loadList = pageList.filter(item => {
+      return item.averageUserRating === undefined;
+    }); // 需要加載的列表
     const promises = loadList.map(item => {
       return request.get(`/hk/lookup?id=${item.id.attributes['im:id']}`);
-    });
+    }); // 加載請求數組
     Promise.all(promises)
       .then(lookupArr => {
         const list = loadList.map((item, index) => {
           const { userRatingCount = 0, averageUserRating = 0 } = lookupArr[index].results[0];
           return { ...item, userRatingCount, averageUserRating };
         });
-        loadSearchListSuccess({ page, list });
+        appList.list = appList.list.map(item => {
+          list.find(loadItem => {
+            if (item.id.attributes['im:id'] === loadItem.id.attributes['im:id']) {
+              item = loadItem;
+              return true;
+            }
+            return false;
+          });
+          return item;
+        });
+        pageList = pageList.map(item => {
+          list.find(loadItem => {
+            if (item.id.attributes['im:id'] === loadItem.id.attributes['im:id']) {
+              item = loadItem;
+              return true;
+            }
+            return false;
+          });
+          return item;
+        });
+        updateAppList(appList);
+        loadSearchListSuccess({ page, list: pageList });
       })
       .catch(error => {
         this.loadSearchList(page);
@@ -78,21 +102,33 @@ class AppList extends PureComponent {
 
   // 分页加载评分等级和评论数量
   loadShowList = page => {
-    const { appList, loadShowList, loadShowListSuccess } = this.props;
+    const { appList, updateAppList, loadShowList, loadShowListSuccess } = this.props;
     loadShowList();
     const startIndex = 10 * (page - 1);
     const endIndex = 10 * (page - 1) + 10;
-    const loadList = appList.list.slice(startIndex, endIndex);
+    const pageList = appList.list.slice(startIndex, endIndex); //分页列表
+    const loadList = pageList.filter(item => item.averageUserRating === undefined); // 需要加载的列表
     const promises = loadList.map(item => {
       return request.get(`/hk/lookup?id=${item.id.attributes['im:id']}`);
-    });
+    }); // 加载列表请求数组
     Promise.all(promises)
       .then(lookupArr => {
         const list = loadList.map((item, index) => {
           const { userRatingCount = 0, averageUserRating = 0 } = lookupArr[index].results[0];
           return { ...item, userRatingCount, averageUserRating };
         });
-        loadShowListSuccess({ page, list });
+        appList.list = appList.list.map(item => {
+          list.find(loadItem => {
+            if (item.id.attributes['im:id'] === loadItem.id.attributes['im:id']) {
+              item = loadItem;
+              return true;
+            }
+            return false;
+          });
+          return item;
+        });
+        updateAppList(appList);
+        loadShowListSuccess({ page, list: appList.list.slice(startIndex, endIndex) });
       })
       .catch(error => {
         this.loadShowList(page);
@@ -100,8 +136,19 @@ class AppList extends PureComponent {
   };
 
   render() {
-    const { keywords, showList, searchList, viewport } = this.props;
+    const { appList, keywords, showList, searchList, viewport } = this.props;
     const { status, list } = keywords ? searchList : showList;
+    let searchAllList = [];
+    if (keywords) {
+      searchAllList = appList.list.filter(item => {
+        const name = item['im:name'].label;
+        const category = item.category.attributes.label;
+        const summary = item.summary.label;
+        const reg = new RegExp(keywords);
+        return reg.test(name) || reg.test(category) || reg.test(summary);
+      });
+    }
+
     return (
       <>
         <ul className={styles.list}>
@@ -120,6 +167,7 @@ class AppList extends PureComponent {
                       .fill(0)
                       .map((_, index) => (
                         <i
+                          key={index}
                           className={`iconfont ${
                             index + 1 <= item.averageUserRating * 1 ? 'icon-star-full' : 'icon-star'
                           }`}
@@ -140,6 +188,11 @@ class AppList extends PureComponent {
         {list.length === 100 && (
           <div className={styles.bottomLine}>
             <span>我是有底线的</span>
+          </div>
+        )}
+        {keywords && searchAllList.length > 0 && list.length === searchAllList.length && (
+          <div className={styles.bottomLine}>
+            <span>沒有更多了</span>
           </div>
         )}
         {status === 'success' && list.length === 0 && (
@@ -165,6 +218,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   lookUp: payload => dispatch({ type: 'lookUp', payload }),
   getAppList: payload => dispatch({ type: 'getAppList', payload }),
+  updateAppList: payload => dispatch({ type: 'updateApplist', payload }),
   loadShowList: payload => dispatch({ type: 'loadShowList', payload }),
   loadShowListSuccess: payload => dispatch({ type: 'loadShowListSuccess', payload }),
   loadSearchList: payload => dispatch({ type: 'loadSearchList', payload }),

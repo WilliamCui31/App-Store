@@ -13,7 +13,7 @@ const SearchBar = ({ inputKeywords, clearKeywords }) => {
   // 节流搜索
   const handleSearch = throttle(() => {
     inputKeywords(searchInput.current.value.trim() || '');
-  }, 500);
+  }, 800);
 
   return (
     <header className={styles.searchBar}>

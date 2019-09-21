@@ -27,10 +27,9 @@
     overflow-x: auto;
     overflow-y: hidden;
     .list {
-      .px2rem(width, 915px);
+      display: flex;
       li {
-        float: left;
-        .px2rem(width, 75px);
+        .px2rem(flex-basis, 75px);
         .px2rem(margin-left, 15px);
         animation: fadeIn 0.5s linear;
         .img {

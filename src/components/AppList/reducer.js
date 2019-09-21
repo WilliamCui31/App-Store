@@ -14,6 +14,11 @@ const listReducer = {
           status: 'failure',
           msg: action.payload.msg
         });
+      case 'updateAppList':
+        return Object.assign({}, state, {
+          status: 'success',
+          list: action.payload
+        });
       default:
         return state;
     }
@@ -40,7 +45,7 @@ const listReducer = {
     }
   },
 
-  // 當前顯示app列表
+  // 當前搜索app列表
   searchList: (state = { status: 'empty', page: 0, list: [] }, action) => {
     switch (action.type) {
       case 'loadSearchList':
