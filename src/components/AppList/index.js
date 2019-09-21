@@ -69,7 +69,7 @@ class AppList extends PureComponent {
     Promise.all(promises)
       .then(lookupArr => {
         const list = loadList.map((item, index) => {
-          const { userRatingCount = 0, averageUserRating = 0 } = lookupArr[index].results[0];
+          const { userRatingCount = 0, averageUserRating = 0 } = lookupArr[index].results[0] || {};
           return { ...item, userRatingCount, averageUserRating };
         });
         appList.list = appList.list.map(item => {
@@ -114,7 +114,7 @@ class AppList extends PureComponent {
     Promise.all(promises)
       .then(lookupArr => {
         const list = loadList.map((item, index) => {
-          const { userRatingCount = 0, averageUserRating = 0 } = lookupArr[index].results[0];
+          const { userRatingCount = 0, averageUserRating = 0 } = lookupArr[index].results[0] || {};
           return { ...item, userRatingCount, averageUserRating };
         });
         appList.list = appList.list.map(item => {

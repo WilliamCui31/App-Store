@@ -37,7 +37,10 @@ class Recommendation extends PureComponent {
               return (
                 <li key={item.id.attributes['im:id']}>
                   <div className={styles.img}>
-                    <img src={item['im:image'][viewport.width > 320 ? 2 : 1].label} alt="app-img" />
+                    <img
+                      src={item['im:image'][viewport.width > 320 || viewport.dpr > 1 ? 2 : 1].label}
+                      alt="app-img"
+                    />
                   </div>
                   <h5 className={styles.name}>{item['im:name'].label}</h5>
                   <h6 className={styles.category}>{item.category.attributes.label}</h6>
