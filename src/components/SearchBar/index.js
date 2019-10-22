@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { throttle } from '../../utils';
+import { debounce } from '../../utils';
 import styles from './search-bar.less';
 
 const SearchBar = ({ inputKeywords, clearKeywords }) => {
@@ -10,8 +10,8 @@ const SearchBar = ({ inputKeywords, clearKeywords }) => {
     searchInput.current.focus();
   }
 
-  // 节流搜索
-  const handleSearch = throttle(() => {
+  // 防抖搜索
+  const handleSearch = debounce(() => {
     inputKeywords(searchInput.current.value.trim() || '');
   }, 800);
 
