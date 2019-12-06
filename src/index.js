@@ -6,7 +6,7 @@ import createSagaMiddleware from 'redux-saga'; // 引入redux-saga中的createSa
 import rootReducer from './rootReducer'; // 引入reducer
 import rootSaga from './rootSaga'; // 引入saga
 import App from './App';
-import * as serviceWorker from './serviceWorker';
+import * as serviceWorker from './serviceWorker'; //serviceWorker
 
 import './normalize.css';
 import './index.less';
